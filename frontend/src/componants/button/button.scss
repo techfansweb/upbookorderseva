@@ -1,0 +1,40 @@
+.button {
+    position: relative;
+    width: 100%;
+    outline: none;
+    border: none;
+    background-color: blueviolet;
+    padding: 10px;
+    border-radius: 3px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    overflow: hidden;
+
+    div {
+        opacity: .3;
+        border-radius: 50%;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #fff;
+        animation: anim .5s ease-in;
+    }
+}
+
+@keyframes anim {
+    0% {
+        transform: scale(0);
+        opacity: 0.3;
+    }
+
+    90% {
+        transform: scale(70);
+        opacity: 0.2;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

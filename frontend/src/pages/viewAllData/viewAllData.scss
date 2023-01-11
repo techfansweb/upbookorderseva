@@ -1,0 +1,197 @@
+.viewAllData {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 15px;
+    overflow: auto;
+    height: 100%;
+
+
+    .select {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+
+        .dates,
+        .location {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+    }
+
+    .totals {
+        font-size: 10px;
+        display: flex;
+        width: 100%;
+        background-color: blueviolet;
+        border-radius: 3px;
+        padding: 10px;
+        gap: 5px;
+
+        .posts {
+            background-color: rgb(242, 242, 242);
+        }
+
+        .orders {
+            background-color: rgb(98, 255, 0);
+        }
+
+        .posts,
+        .orders {
+            color: gray;
+            padding: 10px;
+            border-radius: 3px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+
+            >div {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+
+                span:nth-child(1) {
+                    font-size: 8px;
+                }
+
+                span:nth-child(2) {
+                    font-weight: bold;
+                    color: black;
+                }
+            }
+        }
+    }
+
+    .lists {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .list {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .listDetails {
+            width: 100%;
+            background-color: blueviolet;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding:20px;
+            align-items: flex-end;
+            gap: 10px;
+            color: white;
+            display: none;
+
+            &.active {
+                display: flex;
+            }
+
+            .detailCopyButton{
+                width: 30%;
+                padding: 7px 10px;
+                background-color: #fff;
+                color: blueviolet;
+                border-radius: 4px;
+                display: flex;
+                font-size: 15px;
+                margin-top: 5px;
+                justify-content: center;
+                cursor: pointer;
+            }
+
+            >div {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+
+                span:nth-child(2) {
+                    font-weight: bold;
+                }
+            }
+        }
+
+        .listName {
+            width: 100%;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border: 1px solid lightgray;
+            padding: 5px;
+            border-radius: 4px;
+
+            .sn,
+            .arrow {
+                width: 30px;
+                height: 30px;
+                max-width: 30px;
+                color: blueviolet;
+                align-items: center;
+                padding: 5px;
+                display: grid;
+                place-items: center;
+                border-radius: 50%;
+                transition: .3s;
+            }
+            .sn{
+                font-size: 18px;
+            }
+
+            .arrow{
+                transform: rotate(-90deg);
+            }
+
+            .districtname {
+                font-size: 14px;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                text-transform: capitalize;
+
+                span:nth-child(2){
+                    font-size: 10px;
+                    color: gray;
+                }
+            }
+
+            .arrow {
+                background-color: white;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+
+        }
+    }
+}
+
+.pagination{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 4px;
+
+    span{
+        width: max-content;
+        border-radius: 3px;
+        cursor: pointer;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        border: 1px solid gray;
+        font-size: 14px;
+    }
+}

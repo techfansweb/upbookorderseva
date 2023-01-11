@@ -1,0 +1,30 @@
+.page {
+    width: 350px;
+    background-color: #fff;
+    padding-bottom: 10px;
+    height: calc(100vh - 50px);
+    margin-top: 30px;
+    display: flex;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 30px;
+    overflow: auto;
+
+    form{
+        width: 100%;
+        height: max-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .page {
+        width: 90%;
+    }
+}
