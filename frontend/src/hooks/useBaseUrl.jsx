@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const link = "/api/bookseva"
+const link = "http://localhost:5000/api/bookseva"
 const baseUrl = axios.create({
     baseURL: link,
     headers: {

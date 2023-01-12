@@ -67,11 +67,13 @@ const ViewAllBookData = () => {
     const prevPage = () => {
         if (currentPage == 1) return
         dispatch(bookDecress())
+        useRenderBookData(allBookData, dispatch, currentPage - 1)
     }
 
     // next function
     const nextPage = () => {
         dispatch(bookIncress())
+        useRenderBookData(allBookData, dispatch, currentPage + 1)
     }
 
     // mandal & district list
@@ -204,7 +206,7 @@ const ViewAllBookData = () => {
         } else {
             useRenderBookData(allBookData, dispatch, currentPage)
         }
-    }, [nextSuccessStatus, prevSuccessStatus, bookAddSuccessStatus])
+    }, [bookAddSuccessStatus])
 
     return (
         <Layout>
@@ -314,7 +316,7 @@ const DetailsBook = ({ data }) => {
     // copy function
     const copyData = async () => {
 
-        const date = dayjs(data.subname).format("DD-MMM-YYYY")
+        const date = dayjs(data.date).format("DD-MMM-YYYY")
         const text = `Sat Saheb Ji
 Satguru Dev Ji Ki Jay
             

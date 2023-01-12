@@ -54,11 +54,13 @@ const ViewAllUserData = () => {
     const prevPage = () => {
         if (currentPage == 1) return
         dispatch(userDecress())
+        useRenderUserData(allUserData, dispatch, currentPage - 1)
     }
 
     // next page
     const nextPage = () => {
         dispatch(userIncress())
+        useRenderUserData(allUserData, dispatch, currentPage + 1)
     }
 
     // useEffect call only 1 time
@@ -69,7 +71,8 @@ const ViewAllUserData = () => {
         } else {
             useRenderUserData(allUserData, dispatch, currentPage)
         }
-    }, [userAddSuccessStatus, prevSuccess, nextSuccess])
+    }, [userAddSuccessStatus])
+    
 
     return (
         <Layout>
