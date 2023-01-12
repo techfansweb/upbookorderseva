@@ -66,7 +66,7 @@ const ViewAllUserData = () => {
 
         if (!allUserData[0] || userAddSuccessStatus) {
             useLoadUserData(dispatch)
-        } else if (prevSuccess || nextSuccess) {
+        } else {
             useRenderUserData(allUserData, dispatch, currentPage)
         }
     }, [userAddSuccessStatus, prevSuccess, nextSuccess])
