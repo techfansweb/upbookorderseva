@@ -35,8 +35,8 @@ const MandalList = [
         ]
     },
     {
-        bareili : [
-            "pilibhit", "bareili", "shahanjahapur", "badaun" 
+        bareilly : [
+            "pilibhit", "bareilly", "shahanjahapur", "badaun" 
         ]
     },
     {
@@ -55,8 +55,8 @@ const MandalList = [
         ]
     },
     {
-        jhanshi : [
-            "jhanshi", "jalon", "lalitpur"
+        jhansi : [
+            "jhansi", "jalon", "lalitpur"
         ]
     },
     {
