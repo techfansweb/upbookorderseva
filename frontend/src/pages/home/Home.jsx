@@ -34,6 +34,8 @@ import { bookFilterRemove } from "../../store/bookFilterSlice"
 import { bookLoadRemove } from "../../store/bookLoadSlice"
 
 import NotFound from "../../componants/NotFound/NotFound"
+import { imageDownloadStart, imageDownloadSuccess } from "../../store/imageDownloadSlice"
+import ImageReport from "../../componants/imageReport/ImageReport"
 
 const Home = () => {
 
@@ -41,11 +43,13 @@ const Home = () => {
     const { fullname, number, role, mandal } = useSelector(state => state.auths)
     const { allBookData, todayData, todayCount, bookLoadSuccessStatus } = useSelector(state => state.bookLoads)
     const { bookAddSuccessStatus } = useSelector(state => state.bookAdds)
+    const { imageDownloadStartStatus } = useSelector(state => state.imageDownlaods)
 
     // react hook
     const copyRef1 = useRef(null)
     const copyRef2 = useRef(null)
     const copyRef3 = useRef(null)
+    const downloadReportRef = useRef(null)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -87,7 +91,7 @@ const Home = () => {
 
         const head = `      *N O* - *I O*\n`
         arr.unshift(head)
-     
+
         return arr
     }
 
@@ -185,80 +189,101 @@ ${data}
         dispatch(logoutStart())
     }
 
+
+    // download report
+
+    const downloadReport = () => {
+        dispatch(imageDownloadStart())
+    }
+
+
     return (
-        <Layout>
-            <div className="home">
-                <div className="totalData">
-                    <Box1
-                        title="📄 Posts"
-                        title1="National"
-                        title2="InterNatinal"
-                        value1={
-                            bookLoadSuccessStatus ? todayCount.npost : 0
-                        }
-                        value2={
-                            bookLoadSuccessStatus ? todayCount.ipost : 0
-                        }
-                        bg="orange"
-                    />
-                    <Box1
-                        title="📚 Orders"
-                        title1="National"
-                        title2="InterNatinal"
-                        value1={
-                            bookLoadSuccessStatus ? todayCount.norder : 0
-                        }
-                        value2={
-                            bookLoadSuccessStatus ? todayCount.iorder : 0
-                        }
-                        bg="blueviolet"
-                    />
-                </div>
-
-
-                <Box2 onClick={goToForm}>
-                    <div className="fillFormIcon">+</div>
-                </Box2>
-
-
-                <Box>
-                    <Title2>👨‍💼 Status</Title2>
-                    {
-                        role == "user" ?
-                            statusListMandal.map((item, i) => <StatusListBox key={i} sn={i + 1} data={item} />) :
-                            statusListState.map((item, i) => <StatusListBox key={i} sn={i + 1} data={item} />)
-                    }
-                </Box>
-
-                {
-                    role == "user" && districtArray[0].length == fillMandalData.length || role == "admin" ?
-                        <Box>
-                            <Title2>📑 Reports</Title2>
-                            <ReportBox>
-                                <Button buttonRef={copyRef1} func={copyReport1} >Copy 1</Button>
-                            </ReportBox>
-                            <ReportBox>
-                                <Button buttonRef={copyRef2} func={copyReport2} >Copy 2</Button>
-                            </ReportBox>
-                            {
-                                role == "admin" ?
-                                    <ReportBox>
-                                        <Button buttonRef={copyRef3} func={copyReport3} >Copy 3</Button>
-                                    </ReportBox> : null
+        <>
+            {
+               <ImageReport />
+            }
+            <Layout>
+                <div className="home">
+                    <div className="totalData">
+                        <Box1
+                            title="📄 Posts"
+                            title1="National"
+                            title2="InterNatinal"
+                            value1={
+                                bookLoadSuccessStatus ? todayCount.npost : 0
                             }
-                        </Box> : null
-                }
+                            value2={
+                                bookLoadSuccessStatus ? todayCount.ipost : 0
+                            }
+                            bg="orange"
+                        />
+                        <Box1
+                            title="📚 Orders"
+                            title1="National"
+                            title2="InterNatinal"
+                            value1={
+                                bookLoadSuccessStatus ? todayCount.norder : 0
+                            }
+                            value2={
+                                bookLoadSuccessStatus ? todayCount.iorder : 0
+                            }
+                            bg="blueviolet"
+                        />
+                    </div>
 
-                <Box>
-                    <Button func={viewBookData}>View All Book Data</Button>
+
+                    <Box2 onClick={goToForm}>
+                        <div className="fillFormIcon">+</div>
+                    </Box2>
+
+
+                    <Box>
+                        <Title2>👨‍💼 Status</Title2>
+                        {
+                            role == "user" ?
+                                statusListMandal.map((item, i) => <StatusListBox key={i} sn={i + 1} data={item} />) :
+                                statusListState.map((item, i) => <StatusListBox key={i} sn={i + 1} data={item} />)
+                        }
+                    </Box>
+
                     {
-                        role == "admin" ? <Button func={viewUserData}>View All User Data</Button> : null
+                        role == "user" && districtArray[0].length == fillMandalData.length || role == "admin" ?
+                            <Box>
+                                <Title2>📑 Reports</Title2>
+                                <ReportBox>
+                                    <Button buttonRef={copyRef1} func={copyReport1} >Copy 1</Button>
+                                </ReportBox>
+                                <ReportBox>
+                                    <Button buttonRef={copyRef2} func={copyReport2} >Copy 2</Button>
+                                </ReportBox>
+                                {
+                                    role == "admin" ?
+                                        <ReportBox>
+                                            <Button buttonRef={copyRef3} func={copyReport3} >Copy 3</Button>
+                                        </ReportBox> : null
+                                }
+                                {
+                                    role == "admin" ?
+                                        <ReportBox>
+                                            <Button buttonRef={downloadReportRef} func={downloadReport} >
+                                                {imageDownloadStartStatus ? "Downloading...👨‍🏭" : "Download"}
+                                            </Button>
+                                        </ReportBox> : null
+                                }
+                            </Box> : null
                     }
-                    <Button func={logout}>Logout</Button>
-                </Box>
-            </div>
 
-        </Layout>
+                    <Box>
+                        <Button func={viewBookData}>View All Book Data</Button>
+                        {
+                            role == "admin" ? <Button func={viewUserData}>View All User Data</Button> : null
+                        }
+                        <Button func={logout}>Logout</Button>
+                    </Box>
+                </div>
+            </Layout>
+        </>
+
     )
 }
 

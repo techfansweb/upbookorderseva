@@ -5,6 +5,7 @@ import bookFilterSlice from './bookFilterSlice'
 import bookLoadSlice from './bookLoadSlice'
 import bookSlice from './bookSlice'
 import detailsBoxSlice from './detailsBoxSlice'
+import imageDownloadSlice from './imageDownloadSlice'
 import userAddSlice from './userAddSlice'
 import userFilterSlice from './userFilterSlice'
 import userLoadSlice from './userLoadSlice'
@@ -19,6 +20,7 @@ export const store = configureStore({
         bookLoads: bookLoadSlice,
         bookFilters: bookFilterSlice,
         userFilters: userFilterSlice,
-        detailsBoxs : detailsBoxSlice
+        detailsBoxs : detailsBoxSlice,
+        imageDownlaods : imageDownloadSlice
     },
 })

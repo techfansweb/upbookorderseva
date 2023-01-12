@@ -40,7 +40,7 @@ export const useTotalBooksMandal = (filledData, mandalName, type) => {
     data.map(item => {
 
         let obj = {
-            name: "",
+            name: Object.keys(item)[0],
             norder: 0,
             iorder: 0,
             totalinrder: 0,
