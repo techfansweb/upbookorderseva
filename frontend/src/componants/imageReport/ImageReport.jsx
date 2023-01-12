@@ -30,11 +30,11 @@ const ImageReport = () => {
         const link = canvas.toDataURL("jpg/jpeg", 1.0)
 
         // get date
-        const date = dayjs().valueOf()
+        const date = dayjs().format("DD-MM-YYYY")
         // create anchor tag
         const a = document.createElement("a")
         a.href = link
-        a.download = `bookOrderReport.${date}.up.jpg`
+        a.download = `bookOrderReportUp.${date}.jpg`
         a.click()
         dispatch(imageDownloadSuccess())
     }
@@ -84,8 +84,8 @@ const ImageReport = () => {
                 </div>
             </div>
             <div className="info">
-                <span>N* stands for National Order</span>
-                <span>I* stands for InterNational Order</span>
+                <span>N = National</span>
+                <span>I = InterNational</span>
             </div>
         </div>
     )
