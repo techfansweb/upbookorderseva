@@ -32,8 +32,8 @@ import { logoutStart } from "../../store/authSlice"
 import dayjs from "dayjs"
 import { bookFilterRemove } from "../../store/bookFilterSlice"
 import { bookLoadRemove } from "../../store/bookLoadSlice"
-import NotFound from "../../componants/NotFound/NotFound"
 
+import NotFound from "../../componants/NotFound/NotFound"
 
 const Home = () => {
 
@@ -84,6 +84,10 @@ const Home = () => {
             const text = `${sn}. | *${norder}* - *${iorder}* | ${name}\n`
             return text
         })
+
+        const head = `      *N O* - *I O*\n`
+        arr.unshift(head)
+     
         return arr
     }
 
@@ -253,6 +257,7 @@ ${data}
                     <Button func={logout}>Logout</Button>
                 </Box>
             </div>
+
         </Layout>
     )
 }
@@ -311,4 +316,7 @@ const Box4 = ({ title, value }) => {
         </div>
     )
 }
+
+
+
 export default Home
