@@ -4,12 +4,12 @@ import dayjs from "dayjs"
 const useSortData = (data) => {
 
     const sortData = data.sort((a, b) => {
-
-        const item1 = +a.norder + +a.iorder
-        const item2 = +b.norder + +a.iorder
+        
+        const item1 = a.norder + a.iorder
+        const item2 = b.norder + b.iorder
         return item2 - item1
     })
-
+    
     return sortData
 }
 

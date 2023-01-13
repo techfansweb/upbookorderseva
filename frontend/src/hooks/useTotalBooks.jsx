@@ -44,7 +44,7 @@ export const useTotalBooksMandal = (filledData, mandalName, type) => {
             name: mName,
             norder: 0,
             iorder: 0,
-            totaliorder: 0,
+            totalnorder: 0,
             totaliorder: 0
         }
 

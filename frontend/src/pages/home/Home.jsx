@@ -1,4 +1,5 @@
 import "./home.scss"
+import "../../componants/imageReport/imageReport.scss"
 
 // react hooks
 import { useState } from "react"
@@ -34,8 +35,10 @@ import { bookFilterRemove } from "../../store/bookFilterSlice"
 import { bookLoadRemove } from "../../store/bookLoadSlice"
 
 import NotFound from "../../componants/NotFound/NotFound"
-import { imageDownloadStart, imageDownloadSuccess } from "../../store/imageDownloadSlice"
+import { imageDownloadStart, imageDownloadSuccess, pdfDownloadStart, pdfDownloadSuccess } from "../../store/imageDownloadSlice"
 import ImageReport from "../../componants/imageReport/ImageReport"
+import html2canvas from "html2canvas"
+import jspdf from "jspdf"
 
 const Home = () => {
 
@@ -43,13 +46,14 @@ const Home = () => {
     const { fullname, number, role, mandal } = useSelector(state => state.auths)
     const { allBookData, todayData, todayCount, bookLoadSuccessStatus } = useSelector(state => state.bookLoads)
     const { bookAddSuccessStatus } = useSelector(state => state.bookAdds)
-    const { imageDownloadStartStatus } = useSelector(state => state.imageDownlaods)
+    const { imageDownloadStartStatus, pdfDownloadStartStatus } = useSelector(state => state.imageDownlaods)
 
     // react hook
     const copyRef1 = useRef(null)
     const copyRef2 = useRef(null)
     const copyRef3 = useRef(null)
     const downloadReportRef = useRef(null)
+    const downloadPdfReportRef = useRef(null)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -89,7 +93,7 @@ const Home = () => {
             return text
         })
 
-        const head = `      *N O* - *I O*\n`
+        const head = `        *N O* - *I O*\n`
         arr.unshift(head)
 
         return arr
@@ -116,7 +120,7 @@ Satguru Dev Ji Ki Jay
 *❌ Do Not Copy Paste ❌*
 `
 
-        await useCopy(text, copyRef1, "Copy 1")
+        await useCopy(text, copyRef1, role == "admin" ? "Copy State Report" : "Copy Mandal Report")
     }
 
     const copyReport2 = async () => {
@@ -140,7 +144,7 @@ ${data}
 *❌ Do Not Copy Paste ❌*
 `
 
-        await useCopy(text, copyRef2, "Copy 2")
+        await useCopy(text, copyRef2, role == "admin" ? "Copy All Mandal Report" : "Copy All District Report")
     }
 
     const copyReport3 = async () => {
@@ -164,7 +168,7 @@ ${data}
 *❌ Do Not Copy Paste ❌*
 `
 
-        await useCopy(text, copyRef3, "Copy 3")
+        await useCopy(text, copyRef3, "Copy All District Report")
     }
 
     const viewBookData = () => {
@@ -190,17 +194,95 @@ ${data}
     }
 
 
-    // download report
+    // download report 
 
-    const downloadReport = () => {
-        dispatch(imageDownloadStart())
+    const dataToFormet1 = useTotalBooksMandal(todayData)
+    const sortDataForImg = useSortData(dataToFormet1)
+
+    const dataToFormet = useTotalBooksMandal(todayData, mandal, true)
+    const sortData = useSortData(dataToFormet)
+
+    const sortData1 = sortData.slice(0, 20)
+    const sortData2 = sortData.slice(20, 42)
+    const sortData3 = sortData.slice(42, 64)
+    const sortData4 = sortData.slice(64, 75)
+
+    const convertHtmlToCanvas = async (html) => {
+
+        // covert to canvas
+        const canvas = await html2canvas(html)
+        return canvas.toDataURL("jpg/jpeg", 1.0)
     }
 
+    const createTitle = (type) => {
+
+        // get today date
+        const date = dayjs().format("DD-MM-YYYY")
+        return `upBookOrderReport.${type}.${date}`
+    }
+
+
+    const downloadReport = async () => {
+
+        dispatch(imageDownloadStart())
+
+        // creating html to canvas
+        const link = await convertHtmlToCanvas(document.getElementById("reportImage1"))
+
+        // create anchor tag
+        const a = document.createElement("a")
+        a.href = link
+        a.download = `${createTitle("image")}.jpeg`
+        a.click()
+        dispatch(imageDownloadSuccess())
+    }
+
+    const downloadPdfReport = async () => {
+
+        dispatch(pdfDownloadStart())
+        const pdf = new jspdf({
+            orientation: "p",
+            compress: true
+        })
+
+        // page 1
+        const image1 = await convertHtmlToCanvas(document.getElementById("reportImage2"))
+        pdf.addImage(image1, 'JPEG', 0, 0)
+
+        pdf.addPage() // add new page
+
+        // page 2
+        const image2 = await convertHtmlToCanvas(document.getElementById("reportImage3"))
+        pdf.addImage(image2, 'JPEG', 0, 0)
+
+        pdf.addPage() // add new page
+
+        // page 3
+        const image3 = await convertHtmlToCanvas(document.getElementById("reportImage4"))
+        pdf.addImage(image3, 'JPEG', 0, 0)
+
+        pdf.addPage() // add new page
+
+        // page 4
+        const image4 = await convertHtmlToCanvas(document.getElementById("reportImage5"))
+        pdf.addImage(image4, 'JPEG', 0, 0)
+
+        // save file
+        const title = `${createTitle("pdf")}.pdf`
+        pdf.save(title)
+        dispatch(pdfDownloadSuccess())
+    }
 
     return (
         <>
             {
-               <ImageReport />
+                <div className="hiddenReport">
+                    <ImageReport sr="1" sn={true} id="reportImage1" data={sortDataForImg} count={todayCount} isCount={true} />
+                    <ImageReport sr="1" sn={true} id="reportImage2" data={sortData1} count={todayCount} isCount={false} />
+                    <ImageReport sr="21" sn={false} id="reportImage3" data={sortData2} count={todayCount} isCount={false} />
+                    <ImageReport sr="43" sn={false} id="reportImage4" data={sortData3} count={todayCount} isCount={false} />
+                    <ImageReport sr="65" sn={false} id="reportImage5" data={sortData4} count={todayCount} isCount={true} />
+                </div>
             }
             <Layout>
                 <div className="home">
@@ -251,22 +333,34 @@ ${data}
                             <Box>
                                 <Title2>📑 Reports</Title2>
                                 <ReportBox>
-                                    <Button buttonRef={copyRef1} func={copyReport1} >Copy 1</Button>
+                                    <Button buttonRef={copyRef1} func={copyReport1} >
+                                        {role == "admin" ? "Copy State Report" : "Copy Mandal Report"}
+                                    </Button>
                                 </ReportBox>
                                 <ReportBox>
-                                    <Button buttonRef={copyRef2} func={copyReport2} >Copy 2</Button>
+                                    <Button buttonRef={copyRef2} func={copyReport2} >
+                                        {role == "admin" ? "Copy All Mandal Report" : "Copy All District Report"}
+                                    </Button>
                                 </ReportBox>
                                 {
                                     role == "admin" ?
                                         <ReportBox>
-                                            <Button buttonRef={copyRef3} func={copyReport3} >Copy 3</Button>
+                                            <Button buttonRef={copyRef3} func={copyReport3} >Copy All District Report</Button>
                                         </ReportBox> : null
                                 }
                                 {
                                     role == "admin" ?
                                         <ReportBox>
-                                            <Button buttonRef={downloadReportRef} func={downloadReport} >
-                                                {imageDownloadStartStatus ? "Downloading...👨‍🏭" : "Download"}
+                                            <Button style={{ fontSize: "13px" }} buttonRef={downloadReportRef} func={downloadReport} >
+                                                {imageDownloadStartStatus ? "Downloading...👨‍🏭" : "Download All Mandal Report (Image)"}
+                                            </Button>
+                                        </ReportBox> : null
+                                }
+                                {
+                                    role == "admin" ?
+                                        <ReportBox>
+                                            <Button style={{ fontSize: "13px" }} buttonRef={downloadPdfReportRef} func={downloadPdfReport}>
+                                                {pdfDownloadStartStatus ? "Downloading...👨‍🏭" : "Download All District Report (Pdf)"}
                                             </Button>
                                         </ReportBox> : null
                                 }
