@@ -67,10 +67,10 @@ const ImageReport = () => {
                         let obj = {}
                         obj.sr = useNumber(i + 1, 10)
                         obj.name = useCapitalLatter(item.name)
-                        obj.norder = useNumber(item.norder, 10)
-                        obj.iorder = useNumber(item.iorder, 10)
+                        obj.norder = useNumber(+item.norder, 10)
+                        obj.iorder = useNumber(+item.iorder, 10)
                         obj.conditionForClass = conditionForClass
-                        obj.total = useNumber(item.iorder + item.norder, 10)
+                        obj.total = useNumber(+item.iorder + +item.norder, 10)
                         return <DataRow key={i} data={obj} />
                     })
                 }
