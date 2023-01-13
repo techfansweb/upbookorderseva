@@ -78,9 +78,9 @@ const ImageReport = () => {
                 <div className="totalTabRow tabRow">
                     <span></span>
                     <span>Grand Total</span>
-                    <span>{useNumber(todayCount.norder, 10)}</span>
-                    <span>{useNumber(todayCount.iorder, 10)}</span>
-                    <span>{useNumber(todayCount.iorder + todayCount.norder, 10)}</span>
+                    <span>{useNumber(+todayCount.norder, 10)}</span>
+                    <span>{useNumber(+todayCount.iorder, 10)}</span>
+                    <span>{useNumber(+todayCount.iorder + +todayCount.norder, 10)}</span>
                 </div>
             </div>
             <div className="info">
@@ -98,9 +98,9 @@ const DataRow = ({ data }) => {
         <div className={`dataTabRow tabRow ${data.conditionForClass}`}>
             <span>{data.sr}</span>
             <span>{data.name}</span>
-            <span>{data.norder}</span>
-            <span>{data.iorder}</span>
-            <span>{data.total}</span>
+            <span>{+data.norder}</span>
+            <span>{+data.iorder}</span>
+            <span>{+data.total}</span>
         </div>
     )
 }
