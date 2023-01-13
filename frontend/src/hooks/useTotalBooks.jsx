@@ -39,18 +39,18 @@ export const useTotalBooksMandal = (filledData, mandalName, type) => {
     let arr = []
     data.map(item => {
 
+        const mName = mandalName && type ? item : mandalName ? item : Object.keys(item)[0]
         let obj = {
-            name: Object.keys(item)[0],
+            name: mName,
             norder: 0,
             iorder: 0,
-            totalinrder: 0,
+            totaliorder: 0,
             totaliorder: 0
         }
 
         // map on filled data
         filledData.map(fillItem => {
 
-            const mName = mandalName ? item : Object.keys(item)[0]
             const dName = mandalName ? fillItem.district : fillItem.mandal
             if (dName == mName) {
                 obj.name = mName
@@ -62,6 +62,7 @@ export const useTotalBooksMandal = (filledData, mandalName, type) => {
                 obj.iorder = obj.iorder
             }
         })
+
         arr.push(obj)
     })
 

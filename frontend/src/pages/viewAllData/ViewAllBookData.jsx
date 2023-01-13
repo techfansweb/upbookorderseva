@@ -67,13 +67,15 @@ const ViewAllBookData = () => {
     const prevPage = () => {
         if (currentPage == 1) return
         dispatch(bookDecress())
-        useRenderBookData(allBookData, dispatch, currentPage - 1)
+        useRenderBookData(allBookData, dispatch, currentPage)
     }
 
     // next function
     const nextPage = () => {
+        console.log(currentPage)
         dispatch(bookIncress())
-        useRenderBookData(allBookData, dispatch, currentPage + 1)
+        console.log(allBookFilterData)
+        useRenderBookData(allBookData, dispatch, currentPage)
     }
 
     // mandal & district list

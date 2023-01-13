@@ -89,5 +89,6 @@ export const useRenderBookData = (data, dispatch, currentPage) => {
     }
 
     const totalCount = useTotalBooks(data)
+    console.log(totalPage)
     dispatch(bookFilterSuccess([dataArray, totalPage, totalCount]))
 }

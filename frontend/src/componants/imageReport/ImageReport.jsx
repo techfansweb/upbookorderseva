@@ -98,9 +98,9 @@ const DataRow = ({ data }) => {
         <div className={`dataTabRow tabRow ${data.conditionForClass}`}>
             <span>{data.sr}</span>
             <span>{data.name}</span>
-            <span>{+data.norder}</span>
-            <span>{+data.iorder}</span>
-            <span>{+data.total}</span>
+            <span>{data.norder}</span>
+            <span>{data.iorder}</span>
+            <span>{data.total}</span>
         </div>
     )
 }
