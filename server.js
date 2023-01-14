@@ -22,9 +22,12 @@ const database = require("./backend/database/database")
 // routes
 const user = require("./backend/routes/user")
 const bookorder = require("./backend/routes/bookorder")
+const timesetting = require("./backend/routes/timesetting")
 
 app.use("/api/bookseva/user", user)
 app.use("/api/bookseva/bookorder", bookorder)
+app.use("/api/bookseva/timesetting", timesetting)
+
 app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
 })

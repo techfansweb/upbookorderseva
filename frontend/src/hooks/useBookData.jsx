@@ -5,7 +5,7 @@ import useTotalPage from "./useTotalPage"
 import useNumber from "./useNumber"
 
 // functions
-import { bookLoadStart, bookLoadSuccess } from "../store/bookLoadSlice"
+import { bookLoadFiltered, bookLoadStart, bookLoadSuccess } from "../store/bookLoadSlice"
 import { bookDecress, bookFilterSuccess } from "../store/bookFilterSlice"
 import useDateFormet from "./useDateFormet"
 import useTotalBooks from "./useTotalBooks"
@@ -48,6 +48,7 @@ export const useLoadBookData = async (dispatch, role, mandal, renderData) => {
         const shortData = useShortDataByDate(reciveData)
         useRenderBookData(shortData, dispatch, 1)
         dispatch(bookLoadSuccess([shortData, todayData, totalCount]))
+        dispatch(bookLoadFiltered(shortData))
         dispatch(bookAddSuccessToFalse())
     } catch (err) {
         console.log(err.message)

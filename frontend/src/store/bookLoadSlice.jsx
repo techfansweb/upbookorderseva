@@ -4,6 +4,7 @@ const initialState = {
     bookLoadStartStatus: false,
     bookLoadSuccessStatus: false,
     allBookData: [],
+    allBookDataOfFiltered: [],
     todayData: [],
     todayCount: {}
 }
@@ -30,9 +31,12 @@ export const bookLoadSlice = createSlice({
         bookLoadRemove: (state) => {
             state.allBookData = []
             state.bookLoadSuccessStatus = false
+        },
+        bookLoadFiltered: (state, action) => {
+            state.allBookDataOfFiltered = action.payload
         }
     },
 })
 
-export const { bookLoadRemove, bookLoadStart, bookLoadSuccess, bookLoadError } = bookLoadSlice.actions
+export const { bookLoadFiltered, bookLoadRemove, bookLoadStart, bookLoadSuccess, bookLoadError } = bookLoadSlice.actions
 export default bookLoadSlice.reducer

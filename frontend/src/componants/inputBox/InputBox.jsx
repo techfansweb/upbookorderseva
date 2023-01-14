@@ -1,7 +1,7 @@
 import { useState } from "react"
 import "./inputBox.scss"
 
-const InputBox = ({ children, type, onChange, value, names, id }) => {
+const InputBox = ({ style, style2, children, type, onChange, value, names, id }) => {
 
     const [focus, setFocus] = useState(false)
 
@@ -12,15 +12,16 @@ const InputBox = ({ children, type, onChange, value, names, id }) => {
     const focusRemove = () => {
         setFocus(false)
     }
-
+    
     return (
-        <div className="inputBox">
+        <div style={style2} className="inputBox">
             <input
                 name={names}
                 value={value}
                 onFocus={onFocus}
                 onBlurCapture={focusRemove}
                 onChange={onChange}
+                style={style}
                 placeholder={children}
                 type={type}
                 id={id}

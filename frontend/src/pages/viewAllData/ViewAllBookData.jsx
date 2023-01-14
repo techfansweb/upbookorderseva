@@ -31,7 +31,7 @@ import Title from "../../componants/title/Title"
 import Loading from "../../componants/loading/Loading"
 
 // functions
-import { bookLoadSuccess } from "../../store/bookLoadSlice"
+import { bookLoadFiltered, bookLoadSuccess } from "../../store/bookLoadSlice"
 import { bookDecress, bookIncress } from "../../store/bookFilterSlice"
 import { removeData } from "../../hooks/useLocalStorage"
 import { detailBox } from "../../store/detailsBoxSlice"
@@ -53,7 +53,7 @@ const ViewAllBookData = () => {
 
     // use selector
     const { mandal, role } = useSelector(state => state.auths)
-    const { allBookData, bookLoadStartStatus } = useSelector(state => state.bookLoads)
+    const { allBookData, allBookDataOfFiltered, bookLoadStartStatus } = useSelector(state => state.bookLoads)
     const { allBookFilterData, totalPage, currentPage, nextSuccessStatus, prevSuccessStatus } = useSelector(state => state.bookFilters)
     const { countAll } = useSelector(state => state.bookFilters)
     const { bookAddSuccessStatus } = useSelector(state => state.bookFilters)
@@ -67,15 +67,13 @@ const ViewAllBookData = () => {
     const prevPage = () => {
         if (currentPage == 1) return
         dispatch(bookDecress())
-        useRenderBookData(allBookData, dispatch, currentPage)
+        useRenderBookData(allBookDataOfFiltered, dispatch, currentPage - 1)
     }
 
     // next function
     const nextPage = () => {
-        console.log(currentPage)
         dispatch(bookIncress())
-        console.log(allBookFilterData)
-        useRenderBookData(allBookData, dispatch, currentPage)
+        useRenderBookData(allBookDataOfFiltered, dispatch, currentPage + 1)
     }
 
     // mandal & district list
@@ -142,7 +140,8 @@ const ViewAllBookData = () => {
 
         // if date and mandal not change
         if (!startdate || !enddate) {
-            return useRenderBookData(allBookData, dispatch, currentPage)
+            dispatch(bookLoadFiltered(allBookData))
+            return useRenderBookData(allBookData, dispatch, 1)
         }
 
         let data
@@ -151,7 +150,8 @@ const ViewAllBookData = () => {
         const eDate = dayjs(enddate).startOf("date").valueOf()
 
         if (eDate < sDate) {
-            return useRenderBookData(allBookData, dispatch, currentPage)
+            dispatch(bookLoadFiltered(allBookData))
+            return useRenderBookData(allBookData, dispatch, 1)
         }
 
         // filter by dates
@@ -164,13 +164,15 @@ const ViewAllBookData = () => {
 
         // if no data
         if (!data[0]) {
-            return useRenderBookData(data, dispatch, currentPage)
+            dispatch(bookLoadFiltered(data))
+            return useRenderBookData(data, dispatch, 1)
         }
 
         if (role == "admin") {
             // if date and mandal not change
             if (!mandalname || mandalname == "value") {
-                return useRenderBookData(data, dispatch, currentPage)
+                dispatch(bookLoadFiltered(data))
+                return useRenderBookData(data, dispatch, 1)
             }
         }
 
@@ -183,12 +185,14 @@ const ViewAllBookData = () => {
 
 
         if (districtname == "value") {
-            return useRenderBookData(data, dispatch, currentPage)
+            dispatch(bookLoadFiltered(data))
+            return useRenderBookData(data, dispatch, 1)
         }
 
         // if no data
         if (!data[0]) {
-            return useRenderBookData(data, dispatch, currentPage)
+            dispatch(bookLoadFiltered(data))
+            return useRenderBookData(data, dispatch, 1)
         }
 
         if (districtname) {
@@ -197,16 +201,20 @@ const ViewAllBookData = () => {
             })
         }
 
-        useRenderBookData(data, dispatch, currentPage)
+        dispatch(bookLoadFiltered(data))
+        useRenderBookData(data, dispatch, 1)
     }
 
     // run on depends
     useEffect(() => {
 
+        dispatch(detailBox(false))
+        dispatch(bookLoadFiltered(allBookData))
         if (!allBookData[0] || bookAddSuccessStatus) {
             useLoadBookData(dispatch, role, mandal)
         } else {
-            useRenderBookData(allBookData, dispatch, currentPage)
+            dispatch(bookDecress(1))
+            useRenderBookData(allBookData, dispatch, 1)
         }
     }, [bookAddSuccessStatus])
 

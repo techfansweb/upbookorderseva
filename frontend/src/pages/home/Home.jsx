@@ -39,6 +39,10 @@ import { imageDownloadStart, imageDownloadSuccess, pdfDownloadStart, pdfDownload
 import ImageReport from "../../componants/imageReport/ImageReport"
 import html2canvas from "html2canvas"
 import jspdf from "jspdf"
+import InputBox from "../../componants/inputBox/InputBox"
+import { addData, updateData } from "../../hooks/useLocalStorage"
+import isProd from "../../isProd"
+import baseUrl from "../../hooks/useBaseUrl"
 
 const Home = () => {
 
@@ -66,6 +70,32 @@ const Home = () => {
     // status list
     const statusListMandal = useSatusList(districtArray, fillMandalData, "mandal")
     const statusListState = useSatusList("", "", "state", todayData)
+
+    // time setting
+    const [runTime, setRunTime] = useState(false)
+    const [timeInput, setTimeInput] = useState({})
+
+    useState(() => {
+
+        const findTime = async () => {
+
+            setRunTime(false)
+            let dataFor
+            if (isProd) {
+                const { data } = await baseUrl.get("/timesetting")
+                dataFor = data
+            } else {
+                let data = JSON.parse(localStorage.getItem("time"))
+            }
+
+            if (!dataFor) return
+            setTimeInput(dataFor)
+            setRunTime(true)
+        }
+
+        findTime()
+    }, [])
+
 
     useEffect(() => {
 
@@ -273,6 +303,42 @@ ${data}
         dispatch(pdfDownloadSuccess())
     }
 
+
+    // form timing setting....
+
+
+    const setValue = (e) => {
+
+        const name = e.target.name
+        const value = e.target.value
+        let obj = { ...timeInput, [name]: value }
+        setTimeInput(obj)
+    }
+
+
+
+    const submitTime = async () => {
+
+        let data
+        if (isProd) {
+            await baseUrl.post("/timesetting/update", timeInput)
+        } else {
+            updateData("time", timeInput)
+        }
+    }
+
+    const timeCalculation = (type) => {
+
+        const ServerTime = new Date()
+        const nowTime = new Date().getTime()
+
+        const hour = +String(timeInput[type]).slice(0, 2)
+        const minute = +String(timeInput[type]).slice(3, 5)
+        ServerTime.setHours(hour, minute)
+
+        return [ServerTime, nowTime]
+    }
+
     return (
         <>
             {
@@ -314,22 +380,71 @@ ${data}
                     </div>
 
 
-                    <Box2 onClick={goToForm}>
-                        <div className="fillFormIcon">+</div>
-                    </Box2>
+                    {
+                        role == "user" && districtArray[0].length == fillMandalData.length ? null :
+                            role == "user" && timeCalculation("formClose")[0] < timeCalculation("formClose")[1] || timeCalculation("formOpen")[0] > timeCalculation("formOpen")[1] ? null :
+                                <Box2 onClick={goToForm}>
+                                    <div className="fillFormIcon">+</div>
+                                </Box2>
+                    }
 
-
-                    <Box>
-                        <Title2>👨‍💼 Status</Title2>
-                        {
-                            role == "user" ?
-                                statusListMandal.map((item, i) => <StatusListBox key={i} sn={i + 1} data={item} />) :
-                                statusListState.map((item, i) => <StatusListBox key={i} sn={i + 1} data={item} />)
-                        }
-                    </Box>
 
                     {
-                        role == "user" && districtArray[0].length == fillMandalData.length || role == "admin" ?
+                        role == "user" && timeCalculation("formOpen")[0] > timeCalculation("formOpen")[1] ? null :
+                            <Box>
+                                <Title2>👨‍💼 Status</Title2>
+                                {
+                                    role == "user" ?
+                                        statusListMandal.map((item, i) => <StatusListBox key={i} sn={i + 1} data={item} />) :
+                                        statusListState.map((item, i) => <StatusListBox key={i} sn={i + 1} data={item} />)
+                                }
+                            </Box>
+                    }
+
+
+                    {/* time setting */}
+                    {
+                        role == "admin" ?
+                            <Box>
+                                <Title2>👨‍💼 Time Setting</Title2>
+                                <ReportBox style={{ width: "100%", display: "flex" }}>
+                                    <InputBox
+                                        names="formOpen"
+                                        onChange={setValue}
+                                        style2={{ width: "60%" }}
+                                        style={{ fontSize: "15px", padding: "5px" }}
+                                        type="time"
+                                        value={runTime ? timeInput.formOpen : "00:00"}
+                                    >Select Form Open Time</InputBox>
+                                    <Button func={submitTime} style={{ fontSize: "15px", padding: "5px", border: "1px solid blueviolet", width: "30%", backgroundColor: "white", color: "blueviolet" }}>Form Open Time</Button>
+                                </ReportBox>
+                                <ReportBox>
+                                    <InputBox
+                                        names="formClose"
+                                        onChange={setValue}
+                                        style2={{ width: "60%" }}
+                                        style={{ fontSize: "15px", padding: "5px" }}
+                                        type="time"
+                                        value={runTime ? timeInput.formClose : "00:00"}
+                                    >Select Form Close Time</InputBox>
+                                    <Button func={submitTime} style={{ fontSize: "15px", padding: "5px", border: "1px solid blueviolet",width: "30%", backgroundColor: "white", color: "blueviolet" }}>Form Close Time</Button>
+                                </ReportBox>
+                                <ReportBox>
+                                    <InputBox
+                                        names="reportClose"
+                                        value={runTime ? timeInput.reportClose : "00:00"}
+                                        onChange={setValue}
+                                        style2={{ width: "60%" }}
+                                        style={{ fontSize: "15px", padding: "5px" }}
+                                        type="time"
+                                    >Select Report Close Time</InputBox>
+                                    <Button func={submitTime} style={{ fontSize: "15px", padding: "5px", border: "1px solid blueviolet", backgroundColor: "white", color: "blueviolet", width: "100%" }}>Report Close Time</Button>
+                                </ReportBox>
+                            </Box> : null
+                    }
+
+                    {
+                        role == "user" && (timeCalculation("reportClose")[0] < timeCalculation("reportClose")[1] || districtArray[0].length !== fillMandalData.length) ? null :
                             <Box>
                                 <Title2>📑 Reports</Title2>
                                 <ReportBox>
@@ -364,7 +479,7 @@ ${data}
                                             </Button>
                                         </ReportBox> : null
                                 }
-                            </Box> : null
+                            </Box>
                     }
 
                     <Box>
@@ -374,6 +489,8 @@ ${data}
                         }
                         <Button func={logout}>Logout</Button>
                     </Box>
+
+
                 </div>
             </Layout>
         </>
@@ -381,10 +498,10 @@ ${data}
     )
 }
 
-const Box = ({ children }) => {
+const Box = ({ children, style }) => {
 
     return (
-        <div className="box">{children}</div>
+        <div style={style} className="box">{children}</div>
     )
 }
 
@@ -395,10 +512,10 @@ const Box2 = ({ children, onClick }) => {
     )
 }
 
-const ReportBox = ({ children }) => {
+const ReportBox = ({ children, style }) => {
 
     return (
-        <div className="reportBox">{children}</div>
+        <div style={style} className="reportBox">{children}</div>
     )
 }
 

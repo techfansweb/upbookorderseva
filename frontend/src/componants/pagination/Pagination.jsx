@@ -8,6 +8,7 @@ const Pagination = ({ prevPage, nextPage, totalPage, currentPage }) => {
     const style = {
         fontSize: "15px"
     }
+
     return (
         <div className="pagination">
             {totalPage >= 2 && currentPage !== 1 ? <Button style={style} func={prevPage}>Prev</Button> : null}

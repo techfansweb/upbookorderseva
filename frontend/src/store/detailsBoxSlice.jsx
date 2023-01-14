@@ -10,8 +10,8 @@ export const detailsBoxSlice = createSlice({
     initialState,
     reducers: {
         detailBox: (state, action) => {
-            state.detailBoxStatus = !state.detailBoxStatus
-            state.detailBoxId = action.payload
+            state.detailBoxStatus = action.payload || !state.detailBoxStatus
+            state.detailBoxId = action.payload || state.detailBoxId
         }
     },
 })

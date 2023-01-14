@@ -7,7 +7,7 @@ const Button = ({ children, func, buttonRef, style, id }) => {
     const onClick = function (e) {
         e.preventDefault()
 
-        func()
+        func && func()
     }
 
     return (

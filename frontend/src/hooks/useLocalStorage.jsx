@@ -11,6 +11,12 @@ export const addData = (key, data, role, password) => {
     localStorage.setItem(key, JSON.stringify(sectionArray))
 }
 
+export const updateData = (key, data) => {
+
+    localStorage.getItem(key) || localStorage.removeItem(key)
+    localStorage.setItem(key, JSON.stringify(data))
+}
+
 export const getData = (key) => {
 
     return JSON.parse(localStorage.getItem(key))
